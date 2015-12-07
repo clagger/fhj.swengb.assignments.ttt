@@ -1,4 +1,4 @@
-package fhj.swengb.assignments.ttt.rladstaetter
+package fhj.swengb.assignments.ttt.clagger
 
 import scala.collection.Set
 
@@ -57,13 +57,18 @@ case object PlayerA extends Player
 
 case object PlayerB extends Player
 
+case object noPlayer extends Player //a third player is needed in order to set an "empthy node"
+
 object TicTacToe {
 
   /**
     * creates an empty tic tac toe game
     * @return
     */
-  def apply(): TicTacToe = ???
+  def apply(): TicTacToe = TicTacToe(Map((TopLeft,noPlayer),(TopCenter, noPlayer),(TopRight, noPlayer),
+                                          (MiddleLeft, noPlayer),(MiddleCenter, noPlayer),(MiddleRight, noPlayer),
+                                          (BottomLeft, noPlayer),(BottomCenter, noPlayer),(BottomRight, noPlayer)))
+
 
   /**
     * For a given tic tac toe game, this function applies all moves to the game.
@@ -73,7 +78,20 @@ object TicTacToe {
     * @param moves
     * @return
     */
-  def play(t: TicTacToe, moves: Seq[TMove]): TicTacToe = ???
+  def play(t: TicTacToe, moves: Seq[TMove]): TicTacToe = {
+
+    var player: Player = PlayerA
+
+    for(move <- moves) {
+      t.turn(move, player)
+      if(player.equals(PlayerA))
+        player = PlayerB
+      else
+        player = PlayerA
+    }
+
+    return t
+  }
 
   /**
     * creates all possible games.
@@ -142,7 +160,9 @@ case class TicTacToe(moveHistory: Map[TMove, Player],
     * @param player the player
     * @return
     */
-  def turn(p: TMove, player: Player): TicTacToe = ???
+  def turn(p: TMove, player: Player): TicTacToe = {
+    this.moveHistory[p, ]
+  }
 
 }
 

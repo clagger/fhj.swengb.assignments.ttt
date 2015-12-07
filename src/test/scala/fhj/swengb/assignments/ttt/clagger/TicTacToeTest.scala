@@ -1,4 +1,4 @@
-package fhj.swengb.assignments.ttt.rladstaetter
+package fhj.swengb.assignments.ttt.clagger
 
 import org.junit.Assert._
 import org.junit.Test
