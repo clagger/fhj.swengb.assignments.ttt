@@ -78,7 +78,7 @@ object TicTacToe {
     * @param moves
     * @return
     */
-  def play(t: TicTacToe, moves: Seq[TMove]): TicTacToe = {
+  def play(t: TicTacToe, moves: Seq[TMove]): TicTacToe = { //why do we need such a function?!
 
     var player: Player = PlayerA
 
@@ -156,12 +156,22 @@ case class TicTacToe(moveHistory: Map[TMove, Player],
   /**
     * returns a copy of the current game, but with the move applied to the tic tac toe game.
     *
-    * @param move to be played
+    * @param p to be played
     * @param player the player
     * @return
     */
   def turn(p: TMove, player: Player): TicTacToe = {
-    this.moveHistory[p, ]
+
+    //check if field is not set yet
+    if(this.moveHistory.get(p).equals(noPlayer)){
+      val newMap = this.moveHistory + (p -> player)
+      return TicTacToe(newMap, player)
+    }
+    else{ //if its set do nothing and return the original map
+      val newMap = this.moveHistory
+      return TicTacToe(newMap, player)
+    }
+
   }
 
 }
