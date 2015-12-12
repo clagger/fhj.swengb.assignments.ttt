@@ -11,7 +11,7 @@ class TicTacToeTest {
   /**
     * contains all possible games as keys and the according game.
     */
-  /*lazy val allGames: Map[Seq[TMove], TicTacToe] = TicTacToe.mkGames()
+  lazy val allGames: Map[Seq[TMove], TicTacToe] = TicTacToe.mkGames()
 
   @Test def setOnEmpty(): Unit = {
     val t = TicTacToe().turn(TopCenter, PlayerA)
@@ -38,7 +38,7 @@ class TicTacToeTest {
     ).gameOver
     assertTrue(gameOver)
   }
-  */
+
 
   // implement yourself more tests
 

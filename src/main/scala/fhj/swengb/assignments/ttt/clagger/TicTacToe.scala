@@ -261,14 +261,19 @@ case class TicTacToe(moveHistory: Map[TMove, Player],
     */
   def turn(p: TMove, player: Player): TicTacToe = {
 
-
+    //switch players
+    var nextPlayer: Player = player
+    if(nextPlayer.equals(PlayerA))
+      nextPlayer = PlayerB
+    else
+    nextPlayer = PlayerA
 
     //check if field is not set yet
     if(this.moveHistory.get(p).contains(noPlayer)){
-      return TicTacToe((this.moveHistory + (p -> player)), player)
+      return TicTacToe((this.moveHistory + (p -> player)), nextPlayer)
     }
     else{ //if its set do nothing and return the original map
-      return TicTacToe(this.moveHistory, player)
+      return TicTacToe(this.moveHistory, nextPlayer)
     }
 
 
