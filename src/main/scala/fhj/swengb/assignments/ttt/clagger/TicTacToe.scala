@@ -1,5 +1,7 @@
 package fhj.swengb.assignments.ttt.clagger
 
+import javafx.application.Application
+
 import scala.collection.Set
 
 /**
@@ -60,6 +62,20 @@ case object PlayerB extends Player
 case object noPlayer extends Player //a third player is needed in order to set an "empthy node"
 
 object TicTacToe {
+
+ def main(args: Array[String]) {
+
+     val t = TicTacToe().turn(TopRight, PlayerA)
+
+   //test output
+   print(t.asString())
+
+
+   //test remainingmoves
+   println(t.remainingMoves.size)
+
+    }
+
 
   /**
     * creates an empty tic tac toe game
@@ -125,7 +141,35 @@ case class TicTacToe(moveHistory: Map[TMove, Player],
     *
     * @return
     */
-  def asString(): String = ???
+  def asString(): String = {
+
+    val indexMap = Map (0->16, 1->20, 2->24,
+                        3->44, 4->48, 5->52,
+                        6->72, 7->76, 8->80)
+    var s: String =
+        "|---|---|---|\n" +
+        "|   |   |   |\n" +
+        "|---|---|---|\n" +
+        "|   |   |   |\n" +
+        "|---|---|---|\n" +
+        "|   |   |   |\n" +
+        "|---|---|---|\n"
+
+
+    for((k,v) <- moveHistory){
+      if(v == PlayerA){
+        s = s.updated(indexMap(k.idx),"O").mkString
+      }
+      else if(v == PlayerB){
+        s = s.updated(indexMap(k.idx),"X").mkString
+      }
+      else{
+        s = s.updated(indexMap(k.idx),"-").mkString
+      }
+    }
+    s
+  }
+
 
   /**
     * is true if the game is over.
@@ -137,7 +181,7 @@ case class TicTacToe(moveHistory: Map[TMove, Player],
   /**
     * the moves which are still to be played on this tic tac toe.
     */
-  val remainingMoves: Set[TMove] = ???
+   val remainingMoves: Set[TMove] = this.moveHistory.filter(_._2.equals(noPlayer)).keySet
 
   /**
     * given a tic tac toe game, this function returns all
@@ -162,15 +206,19 @@ case class TicTacToe(moveHistory: Map[TMove, Player],
     */
   def turn(p: TMove, player: Player): TicTacToe = {
 
+
+
     //check if field is not set yet
-    if(this.moveHistory.get(p).equals(noPlayer)){
-      val newMap = this.moveHistory + (p -> player)
-      return TicTacToe(newMap, player)
+    if(this.moveHistory.get(p).contains(noPlayer)){
+      return TicTacToe((this.moveHistory + (p -> player)), player)
     }
     else{ //if its set do nothing and return the original map
-      val newMap = this.moveHistory
-      return TicTacToe(newMap, player)
+      return TicTacToe(this.moveHistory, player)
     }
+
+
+
+
 
   }
 
