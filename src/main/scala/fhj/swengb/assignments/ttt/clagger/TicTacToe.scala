@@ -65,7 +65,8 @@ object TicTacToe {
 
  def main(args: Array[String]) {
 
-     val t = TicTacToe().turn(TopRight, PlayerA)
+   val t = TicTacToe().turn(TopRight, PlayerA).turn(MiddleCenter, PlayerA).turn(BottomLeft, PlayerA)
+  // val t = TicTacToe().turn(TopRight, PlayerA).turn(MiddleRight, PlayerA).turn(BottomRight, PlayerA)
 
    //test output
    print(t.asString())
@@ -73,6 +74,9 @@ object TicTacToe {
 
    //test remainingmoves
    println(t.remainingMoves.size)
+   println(t.gameOver)
+   println(t.winner)
+
 
     }
 
@@ -176,7 +180,45 @@ case class TicTacToe(moveHistory: Map[TMove, Player],
     *
     * The game is over if either of a player wins or there is a draw.
     */
-  val gameOver : Boolean = ???
+  val gameOver : Boolean = {
+
+    if(winner != None)
+       true
+    else
+       false
+
+  }
+
+  def checkRow(player:Player) :Boolean = {
+    if(moveHistory(TopCenter).equals(player) && moveHistory(TopLeft).equals(player) && moveHistory(TopRight).equals(player))
+       true
+    else if(moveHistory(MiddleCenter).equals(player) && moveHistory(MiddleLeft).equals(player) && moveHistory(MiddleRight).equals(player))
+       true
+    else if(moveHistory(BottomCenter).equals(player) && moveHistory(BottomLeft).equals(player) && moveHistory(BottomRight).equals(player))
+       true
+    else
+       false
+  }
+
+  def checkColumn(player:Player) :Boolean = {
+    if(moveHistory(TopCenter).equals(player) && moveHistory(MiddleCenter).equals(player) && moveHistory(BottomCenter).equals(player))
+       true
+    else if(moveHistory(TopLeft).equals(player) && moveHistory(MiddleLeft).equals(player) && moveHistory(BottomLeft).equals(player))
+       true
+    else if(moveHistory(TopRight).equals(player) && moveHistory(MiddleRight).equals(player) && moveHistory(BottomRight).equals(player))
+       true
+    else
+       false
+  }
+
+  def checkDiag(player:Player) :Boolean = {
+    if(moveHistory(TopRight).equals(player) && moveHistory(MiddleCenter).equals(player) && moveHistory(BottomLeft).equals(player))
+       true
+    else if(moveHistory(TopLeft).equals(player) && moveHistory(MiddleCenter).equals(player) && moveHistory(BottomRight).equals(player))
+       true
+    else
+       false
+  }
 
   /**
     * the moves which are still to be played on this tic tac toe.
@@ -195,7 +237,20 @@ case class TicTacToe(moveHistory: Map[TMove, Player],
     *
     * The set of moves contains all moves which contributed to the result.
     */
-  def winner: Option[(Player, Set[TMove])] = ???
+  def winner: Option[(Player, Set[TMove])] = {
+
+    if(checkRow(PlayerA) || checkDiag(PlayerA) || checkColumn(PlayerA)){
+      val set = moveHistory.filter(_._2.equals(PlayerA)).keySet
+       Some(PlayerA,set)
+    }
+    else if(checkRow(PlayerB) || checkDiag(PlayerB) || checkColumn(PlayerB)){
+      val set = moveHistory.filter(_._2.equals(PlayerB)).keySet
+       Some(PlayerB, set)
+    }
+    else
+       None
+
+  }
 
   /**
     * returns a copy of the current game, but with the move applied to the tic tac toe game.
