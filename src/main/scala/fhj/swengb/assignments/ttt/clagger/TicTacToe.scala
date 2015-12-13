@@ -63,7 +63,7 @@ case object noPlayer extends Player //a third player is needed in order to set a
 
 object TicTacToe {
 
- def main(args: Array[String]) {
+ /*def main(args: Array[String]) {
 
    val t = TicTacToe().turn(TopRight, PlayerA).turn(MiddleCenter, PlayerA).turn(BottomLeft, PlayerA)
   // val t = TicTacToe().turn(TopRight, PlayerA).turn(MiddleRight, PlayerA).turn(BottomRight, PlayerA)
@@ -78,7 +78,7 @@ object TicTacToe {
    println(t.winner)
 
 
-    }
+    }*/
 
 
   /**
@@ -220,6 +220,7 @@ case class TicTacToe(moveHistory: Map[TMove, Player],
        false
   }
 
+
   /**
     * the moves which are still to be played on this tic tac toe.
     */
@@ -238,15 +239,19 @@ case class TicTacToe(moveHistory: Map[TMove, Player],
     * The set of moves contains all moves which contributed to the result.
     */
   def winner: Option[(Player, Set[TMove])] = {
-
+    // player A win
     if(checkRow(PlayerA) || checkDiag(PlayerA) || checkColumn(PlayerA)){
       val set = moveHistory.filter(_._2.equals(PlayerA)).keySet
        Some(PlayerA,set)
     }
+    //player B win
     else if(checkRow(PlayerB) || checkDiag(PlayerB) || checkColumn(PlayerB)){
       val set = moveHistory.filter(_._2.equals(PlayerB)).keySet
        Some(PlayerB, set)
     }
+    // draw
+   else if(this.moveHistory.filter(_._2.equals(noPlayer)).keySet.isEmpty)
+      Some(noPlayer, moveHistory.keySet)
     else
        None
 
@@ -261,19 +266,26 @@ case class TicTacToe(moveHistory: Map[TMove, Player],
     */
   def turn(p: TMove, player: Player): TicTacToe = {
 
-    //switch players
+
+   /* //switch players
     var nextPlayer: Player = player
     if(nextPlayer.equals(PlayerA))
       nextPlayer = PlayerB
     else
-    nextPlayer = PlayerA
+      nextPlayer = PlayerA
+
+      */
 
     //check if field is not set yet
     if(this.moveHistory.get(p).contains(noPlayer)){
-      return TicTacToe((this.moveHistory + (p -> player)), nextPlayer)
+      if (player.equals(PlayerA))
+         TicTacToe((this.moveHistory + (p -> player)), PlayerB)
+      else
+         TicTacToe((this.moveHistory + (p -> player)), PlayerA)
+
     }
     else{ //if its set do nothing and return the original map
-      return TicTacToe(this.moveHistory, nextPlayer)
+       TicTacToe(this.moveHistory, nextPlayer)
     }
 
 

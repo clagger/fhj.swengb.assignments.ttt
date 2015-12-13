@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
+<?import javafx.scene.paint.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
@@ -13,7 +13,7 @@
                 <Font size="55.0" />
             </font>
         </Label>
-      <Label layoutX="126.0" layoutY="183.0" text="Player A">
+      <Label layoutX="26.0" layoutY="154.0" text="Player A:  O ">
          <font>
             <Font size="29.0" />
          </font>
@@ -30,5 +30,25 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
       </GridPane>
+      <Label layoutX="26.0" layoutY="197.0" text="Player B:  X ">
+         <font>
+            <Font size="29.0" />
+         </font>
+      </Label>
+      <Label layoutX="226.0" layoutY="176.0" text="Winner:">
+         <font>
+            <Font size="29.0" />
+         </font>
+      </Label>
+      <Label fx:id="winner" layoutX="354.0" layoutY="176.0" textFill="#ff0404">
+         <font>
+            <Font size="29.0" />
+         </font>
+      </Label>
+      <Button fx:id="newGame" layoutX="399.0" layoutY="266.0" mnemonicParsing="false" text="New Game">
+         <font>
+            <Font size="18.0" />
+         </font>
+      </Button>
     </children>
 </AnchorPane>

@@ -5,7 +5,7 @@ import java.util.ResourceBundle
 import javafx.event.EventHandler
 import javafx.fxml.{FXML, Initializable, FXMLLoader}
 import javafx.geometry.Pos
-import javafx.scene.control.Label
+import javafx.scene.control.{Button, Label}
 import javafx.scene.input.MouseEvent
 import javafx.scene.layout.{GridPane, AnchorPane, BorderPane}
 import javafx.scene.text.Font
@@ -39,9 +39,11 @@ class TicTacToeController extends Initializable {
 
   @FXML var anchor_pane: AnchorPane = _
   @FXML var grid: GridPane = _
+  @FXML var winner: Label = _
+  @FXML var newGame : Button = _
 
   //start a new game
-  val game = TicTacToe()
+  var game = TicTacToe()
   val cellMap:Map[Int, TMove] =  Map(0 -> TopLeft, 1 -> TopCenter, 2 -> TopRight,
                   3 -> MiddleLeft, 4 -> MiddleCenter, 5 -> MiddleRight,
                   6 -> BottomLeft, 7 -> BottomCenter, 8 -> BottomRight)
@@ -50,9 +52,15 @@ class TicTacToeController extends Initializable {
 
 
   override def initialize(location: URL, resources: ResourceBundle): Unit = {
+    initializeGame
+
+  }
+
+  def initializeGame() = {
+
+
 
     //initalizing GridPane and it's cells
-
     val cell0 = new Label()
     val cell1 = new Label()
     val cell2 = new Label()
@@ -71,50 +79,89 @@ class TicTacToeController extends Initializable {
       cell.setUserData(count)
       cell.setAlignment(Pos.CENTER)
       cell.setFont(new Font("Arial", 30))
-      cell.setOnMouseClicked(mouseEventHandler)
+      cell.setOnMouseClicked(mouseEventHandlerCellClick)
+      cell.setText("")
       count +=1
 
     }
-
+    // initialize grid
+    grid.setPrefSize(250,250)
     grid.addRow(0, cell0, cell1, cell2)
     grid.addRow(1, cell3, cell4, cell5)
     grid.addRow(2, cell6, cell7, cell8)
-    grid.setPrefSize(250,250)
+    grid.setGridLinesVisible(true)
 
 
-
-
+    newGame.setOnMouseClicked(mouseEventHandlerNewGame)
 
   }
 
 
-  val mouseEventHandler: EventHandler[_ >: MouseEvent] = new EventHandler[MouseEvent] {
+  val mouseEventHandlerCellClick: EventHandler[_ >: MouseEvent] = new EventHandler[MouseEvent] {
 
     override def handle(event: MouseEvent): Unit = {
       event.getSource match {
         case onClick: Label => {
-          if(game.nextPlayer.equals(PlayerA))
-            onClick.setText("X")
+
+          // if cell is not set yet
+          if(onClick.getText.equals("")) {
+
+            // make an X or an O at the GridPane
+            if(game.nextPlayer.equals(PlayerA))
+              onClick.setText("O")
+            else
+              onClick.setText("X")
+
+            // turn the move
+            val position:Option[TMove] = cellMap.get(onClick.getUserData().toString.toInt)
+            game = game.turn(position.get, game.nextPlayer)
+
+            // if there is a winner or a draw
+            if(game.gameOver)
+              {
+                grid.setDisable(true)
+
+                if (game.winner.get._1.equals(noPlayer))
+                  winner.setText("Draw!")
+                if (game.winner.get._1.equals(PlayerA))
+                  winner.setText("Player A!")
+                if (game.winner.get._1.equals(PlayerB))
+                  winner.setText("Player B!")
+              }
+
+          }
+
           else
-            onClick.setText("O")
-
-        val position:Option[TMove] = cellMap.get(onClick.getUserData().toString.toInt)
-          game.turn(position.get,game.nextPlayer)
-
-
-
-          //to be continued ...
-
-
-
-
-
+            println("cell already set")
         }
 
         case _ => assert(false)
       }
     }
   }
+
+  val mouseEventHandlerNewGame: EventHandler[_ >: MouseEvent] = new EventHandler[MouseEvent] {
+
+    override def handle(event: MouseEvent): Unit = {
+      event.getSource match {
+        case onClick: Button => restartGame
+        case _ => assert(false)
+      }
+    }
+  }
+
+
+  def restartGame: Unit = {
+    val node = grid.getChildren().get(0) //has the gridlines in it
+    game = TicTacToe()                   //start a new TicTacToe
+    grid.getChildren().clear()
+    grid.setDisable(false)
+    grid.getChildren().add(0,node)  //add the gridlines again
+    winner.setText("")
+    initializeGame                  //initialize the new game
+
+  }
+
 
 
 }
